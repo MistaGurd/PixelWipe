@@ -1,0 +1,29 @@
+<MainLayout>:
+    image_widget: image_widget
+    progress_label: progress_label
+
+    Image:
+        id: image_widget
+        allow_stretch: True
+        keep_ratio: True
+        size_hint: (1, 0.7)
+
+    ProgressBar:
+        id: progress
+        size_hint: (1, 0.05)
+        max: 100
+
+    Label:
+        id: progress_label
+        text: "Ingen behandling"
+        size_hint: (1, 0.05)
+
+    Button:
+        text: "Vælg billede"
+        size_hint: (1, 0.1)
+        on_press: root.open_filechooser()
+
+    Button:
+        text: "Fjern baggrund"
+        size_hint: (1, 0.1)
+        on_press: app.root.process_image(filedialog.askdirectory())
