@@ -1,0 +1,31 @@
+<ImageProcessor>:
+    orientation: "vertical"
+
+    Label:
+        id: file_label
+        text: "Select an image or folder"
+        size_hint_y: 0.1
+
+    BoxLayout:
+        size_hint_y: 0.4
+        Image:
+            id: before_image
+            source: ''
+        Image:
+            id: after_image
+            source: ''
+
+    BoxLayout:
+        size_hint_y: 0.1
+        Button:
+            text: "Select File"
+            on_release: root.select_file()
+        Button:
+            text: "Select Folder"
+            on_release: root.select_folder()
+
+    BoxLayout:
+        size_hint_y: 0.1
+        Button:
+            text: "Process"
+            on_release: root.start_processing()
