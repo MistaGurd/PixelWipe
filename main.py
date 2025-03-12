@@ -15,7 +15,7 @@ class ImageProcessor(BoxLayout):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.selected_path = None
-        self.output_path = None
+        self.output_folder = None
         self.processed_images = []
 
     def reset_before_image(self):
@@ -30,9 +30,9 @@ class ImageProcessor(BoxLayout):
         if file_path:
             self.reset_before_image()
             self.selected_path = file_path
-            self.output_path = self.get_output_path(file_path)
-            self.update_file_info(self.selected_path, self.output_path)
-            self.show_image(self.selected_path, self.ids.before_image)  # Show original on left side
+            self.output_folder = None  # Reset output folder until user selects
+            self.update_file_info(self.selected_path, "Not Selected")
+            self.show_image(self.selected_path, self.ids.before_image)
 
     def select_folder(self):
         """ Opens a folder dialog to select a folder """
@@ -42,22 +42,28 @@ class ImageProcessor(BoxLayout):
         if folder_path:
             self.reset_before_image()
             self.selected_path = folder_path
-            self.output_path = self.get_output_path(folder_path, is_folder=True)
-            self.update_file_info(self.selected_path, self.output_path)
+            self.output_folder = None  # Reset output folder until user selects
+            self.update_file_info(self.selected_path, "Not Selected")
 
-    def get_output_path(self, path, is_folder=False):
-        """ Generates the output path for processed images """
-        if is_folder:
-            output_folder = f"{path}_processed"
-            counter = 1
-            while os.path.exists(output_folder):
-                output_folder = f"{path}_processed_{counter}"
-                counter += 1
-            os.makedirs(output_folder)
-            return output_folder
-        else:
-            base, ext = os.path.splitext(path)
-            return f"{base}_bg_removed{ext}"
+    def choose_output_folder(self):
+        """ Asks the user where to save the converted files, or defaults to a new folder """
+        root = tk.Tk()
+        root.withdraw()
+        folder_path = filedialog.askdirectory(title="Select Output Folder")
+        if folder_path:  # User selected a folder
+            return folder_path
+        else:  # Default to a new "processed_images" folder
+            return self.create_output_folder(os.path.dirname(self.selected_path))
+
+    def create_output_folder(self, base_folder):
+        """ Creates a new output folder with a unique name if needed """
+        output_folder = os.path.join(base_folder, "processed_images")
+        counter = 1
+        while os.path.exists(output_folder):
+            output_folder = os.path.join(base_folder, f"processed_images_{counter}")
+            counter += 1
+        os.makedirs(output_folder)
+        return output_folder
 
     def update_file_info(self, selected, saving):
         """ Updates the UI to show selected file/folder and output path """
@@ -68,21 +74,26 @@ class ImageProcessor(BoxLayout):
         Clock.schedule_once(lambda dt: setattr(widget, 'source', image_path), 0)
 
     def start_processing(self):
-        """ Automatically detects whether to process a file or a folder """
+        """ Prompts user for output location and starts processing """
         if not self.selected_path:
             return
 
+        # Ask user for save location
+        self.output_folder = self.choose_output_folder()
+        self.update_file_info(self.selected_path, self.output_folder)
+
+        # Process file or folder
         if os.path.isfile(self.selected_path):
             threading.Thread(target=self.process_image, args=(self.selected_path,), daemon=True).start()
         elif os.path.isdir(self.selected_path):
             threading.Thread(target=self.process_folder, daemon=True).start()
 
     def process_image(self, image_path):
-        """ Removes the background from a single image """
+        """ Removes the background from a single image and saves it in the correct folder """
         try:
             input_img = PILImage.open(image_path)
             output_img = remove(input_img)
-            output_path = self.get_output_path(image_path)
+            output_path = os.path.join(self.output_folder, os.path.basename(image_path))
             output_img.save(output_path)
 
             # Show BEFORE image on the left side
@@ -96,7 +107,7 @@ class ImageProcessor(BoxLayout):
             Clock.schedule_once(lambda dt: setattr(self.ids.file_label, 'text', f"Error: {str(e)}"), 0)
 
     def process_folder(self):
-        """ Removes the background from all images in a selected folder """
+        """ Removes the background from all images in a selected folder and saves them in a new folder """
         try:
             self.processed_images.clear()  # Reset processed images list
             files = [f for f in os.listdir(self.selected_path) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
