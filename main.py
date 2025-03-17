@@ -29,6 +29,19 @@ class ImageProcessor(BoxLayout):
         # Enable drag & drop
         Window.bind(on_dropfile=self.on_drop)
 
+    def on_drop(self, window, file_path):
+        """ Handles drag & drop for files or folders """
+        path = file_path.decode("utf-8")
+
+        if os.path.isdir(path):  # If it's a folder
+            self.selected_path = path
+            self.update_file_info(self.selected_path, "Output: Not Selected")
+        elif path.lower().endswith((".png", ".jpg", ".jpeg")):
+            self.reset_images()
+            self.selected_path = path
+            self.update_file_info(self.selected_path, "Output: Not Selected")
+            self.show_image(self.selected_path, self.ids.before_image)
+
     def reset_images(self):
         """ Clears the Before & After images when selecting a new file or folder """
         Clock.schedule_once(lambda dt: setattr(self.ids.before_image, 'source', ''), 0)
@@ -51,26 +64,10 @@ class ImageProcessor(BoxLayout):
             self.selected_path = folder_path
             self.update_file_info(self.selected_path, "Output: Not Selected")
 
-    def on_drop(self, window, file_path):
-        """ Handles drag & drop for files or folders """
-        path = file_path.decode("utf-8")
-
-        if os.path.isdir(path):  # If it's a folder
-            self.selected_path = path
-            self.update_file_info(self.selected_path, "Output: Not Selected")
-        elif path.lower().endswith((".png", ".jpg", ".jpeg")):
-            self.reset_images()
-            self.selected_path = path
-            self.update_file_info(self.selected_path, "Output: Not Selected")
-            self.show_image(self.selected_path, self.ids.before_image)
-
     def ask_output_folder(self):
         """ Asks user for an output folder when clicking Process, defaults to Downloads """
         folder = filedialog.askdirectory(title="Select Output Folder")
-        if folder:
-            return folder
-        else:
-            return self.create_unique_output_folder(self.default_output_folder)
+        return folder if folder else self.create_unique_output_folder(self.default_output_folder)
 
     def create_unique_output_folder(self, base_folder):
         """ Creates a unique folder for processed images if one exists """
@@ -108,12 +105,22 @@ class ImageProcessor(BoxLayout):
             threading.Thread(target=self.process_folder, daemon=True).start()
 
     def process_image(self, image_path):
-        """ Removes the background from a single image """
+        """ Removes the background from a single image and saves it properly """
         try:
-            input_img = PILImage.open(image_path).convert("RGBA")
-            output_path = os.path.join(self.output_folder, os.path.basename(image_path))
+            # Open the image and ensure it's in RGBA mode
+            input_img = PILImage.open(image_path)
+            if input_img.mode != "RGBA":
+                input_img = input_img.convert("RGBA")
+
+            # Process the image
             output_img = remove(input_img)
-            output_img.save(output_path)
+
+            # Ensure output path ends with .png
+            output_filename = os.path.splitext(os.path.basename(image_path))[0] + "_no_bg.png"
+            output_path = os.path.join(self.output_folder, output_filename)
+
+            # Save as PNG to prevent corruption
+            output_img.save(output_path, format="PNG")
 
             # Show Before image
             self.show_image(image_path, self.ids.before_image)
