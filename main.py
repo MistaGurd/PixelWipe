@@ -36,7 +36,7 @@ class ImageProcessor(BoxLayout):
         if os.path.isdir(path):  # If it's a folder
             self.selected_path = path
             self.update_file_info(self.selected_path, "Output: Not Selected")
-        elif path.lower().endswith((".png", ".jpg", ".jpeg")):
+        elif path.lower().endswith((".png", ".jpg", ".jpeg", ".webp")):
             self.reset_images()
             self.selected_path = path
             self.update_file_info(self.selected_path, "Output: Not Selected")
@@ -49,7 +49,7 @@ class ImageProcessor(BoxLayout):
 
     def select_file(self):
         """ Opens a file dialog to select an image """
-        file_path = filedialog.askopenfilename(filetypes=[("Image files", "*.png;*.jpg;*.jpeg")])
+        file_path = filedialog.askopenfilename(filetypes=[("Image files", "*.png;*.jpg;*.jpeg;*.webp")])
         if file_path:
             self.reset_images()
             self.selected_path = file_path
@@ -136,7 +136,7 @@ class ImageProcessor(BoxLayout):
     def process_folder(self):
         """ Processes all images in a folder and saves them in a new folder """
         try:
-            files = [f for f in os.listdir(self.selected_path) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
+            files = [f for f in os.listdir(self.selected_path) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.webp'))]
             if not files:
                 Clock.schedule_once(lambda dt: self.update_file_info("No images found!", "None"), 0)
                 return
