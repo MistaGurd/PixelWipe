@@ -9,6 +9,8 @@ from tkinter import filedialog
 import tkinter as tk
 from rembg import remove
 from PIL import Image as PILImage
+from PIL import Image
+import pillow_avif
 
 
 class ImageProcessor(BoxLayout):
@@ -36,7 +38,14 @@ class ImageProcessor(BoxLayout):
         if os.path.isdir(path):  # If it's a folder
             self.selected_path = path
             self.update_file_info(self.selected_path, "Output: Not Selected")
-        elif path.lower().endswith((".png", ".jpg", ".jpeg", ".webp")):
+        elif path.lower().endswith((".png", ".jpg", ".jpeg",".webp")):
+            self.reset_images()
+            self.selected_path = path
+            self.update_file_info(self.selected_path, "Output: Not Selected")
+            self.show_image(self.selected_path, self.ids.before_image)
+        elif path.lower().endswith((".avif")):
+            img = Image.open(path)
+            img.save(path,"PNG")
             self.reset_images()
             self.selected_path = path
             self.update_file_info(self.selected_path, "Output: Not Selected")
@@ -49,12 +58,13 @@ class ImageProcessor(BoxLayout):
 
     def select_file(self):
         """ Opens a file dialog to select an image """
-        file_path = filedialog.askopenfilename(filetypes=[("Image files", "*.png;*.jpg;*.jpeg;*.webp")])
+        file_path = filedialog.askopenfilename(filetypes=[("Image files", "*.png;*.jpg;*.jpeg;*.webp;*.avif")])
         if file_path:
             self.reset_images()
             self.selected_path = file_path
             self.update_file_info(self.selected_path, "Output: Not Selected")
             self.show_image(self.selected_path, self.ids.before_image)
+
 
     def select_folder(self):
         """ Opens a folder dialog to select a folder """
@@ -136,7 +146,7 @@ class ImageProcessor(BoxLayout):
     def process_folder(self):
         """ Processes all images in a folder and saves them in a new folder """
         try:
-            files = [f for f in os.listdir(self.selected_path) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.webp'))]
+            files = [f for f in os.listdir(self.selected_path) if f.lower().endswith(('.png', '.jpg', '.jpeg','.webp','.avif'))]
             if not files:
                 Clock.schedule_once(lambda dt: self.update_file_info("No images found!", "None"), 0)
                 return
