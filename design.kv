@@ -3,7 +3,7 @@
 
     Label:
         id: file_label
-        text: "Select an image or folder"
+        text: "Vælg et billede eller en mappe"
         size_hint_y: 0.1
 
     BoxLayout:
@@ -24,10 +24,10 @@
     BoxLayout:
         size_hint_y: 0.1
         Button:
-            text: "Select Image"
+            text: "Vælg et billede"
             on_release: root.select_file()
         Button:
-            text: "Select Folder"
+            text: "Vælg en mappe"
             on_release: root.select_folder()
         Button:
             text: "Process"

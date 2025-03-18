@@ -37,18 +37,18 @@ class ImageProcessor(BoxLayout):
 
         if os.path.isdir(path):  # If it's a folder
             self.selected_path = path
-            self.update_file_info(self.selected_path, "Output: Not Selected")
+            self.update_file_info(self.selected_path, "Output: Ikke valgt")
         elif path.lower().endswith((".png", ".jpg", ".jpeg",".webp")):
             self.reset_images()
             self.selected_path = path
-            self.update_file_info(self.selected_path, "Output: Not Selected")
+            self.update_file_info(self.selected_path, "Output: Ikke valgt")
             self.show_image(self.selected_path, self.ids.before_image)
         elif path.lower().endswith((".avif")):
             img = Image.open(path)
             img.save(path,"PNG")
             self.reset_images()
             self.selected_path = path
-            self.update_file_info(self.selected_path, "Output: Not Selected")
+            self.update_file_info(self.selected_path, "Output: Ikke Valgt")
             self.show_image(self.selected_path, self.ids.before_image)
 
     def reset_images(self):
@@ -62,7 +62,7 @@ class ImageProcessor(BoxLayout):
         if file_path:
             self.reset_images()
             self.selected_path = file_path
-            self.update_file_info(self.selected_path, "Output: Not Selected")
+            self.update_file_info(self.selected_path, "Output: Ikke valgt")
             self.show_image(self.selected_path, self.ids.before_image)
 
 
@@ -72,7 +72,7 @@ class ImageProcessor(BoxLayout):
         if folder_path:
             self.reset_images()
             self.selected_path = folder_path
-            self.update_file_info(self.selected_path, "Output: Not Selected")
+            self.update_file_info(self.selected_path, "Output: Ikke valgt")
 
     def ask_output_folder(self):
         """ Asks user for an output folder when clicking Process, defaults to Downloads """
@@ -91,7 +91,7 @@ class ImageProcessor(BoxLayout):
 
     def update_file_info(self, selected, saving):
         """ Updates the UI to show the selected file/folder and where it will be saved """
-        Clock.schedule_once(lambda dt: setattr(self.ids.file_label, 'text', f"From: {selected}\nTo: {saving}"), 0)
+        Clock.schedule_once(lambda dt: setattr(self.ids.file_label, 'text', f"Fra: {selected}\nTil: {saving}"), 0)
 
     def show_image(self, image_path, widget):
         """ Displays an image in a Kivy Image widget """
