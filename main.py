@@ -22,7 +22,7 @@ class ImageProcessor(BoxLayout):
         self.processed_images = []
 
         # Set default output folder to "Downloads"
-        self.default_output_folder = os.path.join(os.path.expanduser("~"), "Downloads")
+        self.default_output_folder = os.path.join(os.path.expanduser("~"), "Overførsler")
 
         # Hide Tkinter root window
         self.tk_root = tk.Tk()
@@ -126,7 +126,7 @@ class ImageProcessor(BoxLayout):
             output_img = remove(input_img)
 
             # Ensure output path ends with .png
-            output_filename = os.path.splitext(os.path.basename(image_path))[0] + "_no_bg.png"
+            output_filename = os.path.splitext(os.path.basename(image_path))[0] + "ingen_baggrund.png"
             output_path = os.path.join(self.output_folder, output_filename)
 
             # Save as PNG to prevent corruption
@@ -160,9 +160,9 @@ class ImageProcessor(BoxLayout):
                 Clock.schedule_once(lambda dt: setattr(self.ids.progress, 'value', progress_value), 0)
 
             Clock.schedule_once(lambda dt: self.update_file_info(self.selected_path, self.output_folder), 0)
-        except Exception as error:
-            error_message = f"Error: {str(error)}"
-            Clock.schedule_once(lambda dt: self.update_file_info("Error", error_message), 0)
+        except Exception as fejl:
+            fejl_besked = f"Fejl: {str(fejl)}"
+            Clock.schedule_once(lambda dt: self.update_file_info("Fejl", fejl_besked), 0)
 
 
 class ImageProcessorApp(App):
