@@ -100,7 +100,7 @@ class ImageProcessor(BoxLayout):
     def start_processing(self):
         """ Asks for output folder and starts processing """
         if not self.selected_path:
-            self.update_file_info("No file or folder selected!", "None")
+            self.update_file_info("Ingen fil eller mappe valgt!", "Ikke valgt")
             return
 
         self.output_folder = self.ask_output_folder()
