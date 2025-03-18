@@ -100,7 +100,7 @@ class ImageProcessor(BoxLayout):
     def start_processing(self):
         """ Asks for output folder and starts processing """
         if not self.selected_path:
-            self.update_file_info("Ingen fil eller mappe valgt!", "Ikke valgt")
+            self.update_file_info("Ingen fil eller mappe valgt!", "")
             return
 
         self.output_folder = self.ask_output_folder()
@@ -148,7 +148,7 @@ class ImageProcessor(BoxLayout):
         try:
             files = [f for f in os.listdir(self.selected_path) if f.lower().endswith(('.png', '.jpg', '.jpeg','.webp','.avif'))]
             if not files:
-                Clock.schedule_once(lambda dt: self.update_file_info("No images found!", "None"), 0)
+                Clock.schedule_once(lambda dt: self.update_file_info("Ingen billeder fundet!", ""), 0)
                 return
 
             for index, file in enumerate(files):
