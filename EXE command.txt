@@ -1,0 +1,2 @@
+EXE command
+pyinstaller --onefile --windowed --icon="logo.ico" --name PixelWipe --add-data "design.kv;." main.py
