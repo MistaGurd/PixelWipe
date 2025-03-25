@@ -98,9 +98,10 @@ class ImageProcessor(BoxLayout):
         self.ids.file_label.text = f"Fra: {selected}\nTil: {saving}"
 
     def show_image(self, image_path, widget):
-        # Lambda bruges til at få programmet til at vente med at opdatere det widget med billedet før
+        # Lambda bruges til at få programmet til at vente med at opdatere widget før
         # process er klar - og clock..._once sørger for, at det kun sker én gang. Ellers vil output
         # image bare være blankt, da programmet ikke kan process billedet "instant"
+        # https://kivy.org/doc/stable/api-kivy.clock.html
         Clock.schedule_once(lambda dt: setattr(widget, 'source', image_path), 0)
 
     def start_processing(self):
