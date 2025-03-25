@@ -8,9 +8,13 @@ from kivy.core.window import Window
 from tkinter import filedialog
 import tkinter as tk
 from rembg import remove
-from PIL import Image as PILImage
 from PIL import Image
-import pillow_avif
+# Diverse import:
+#   Kivy til UI
+#   RemBG til baggrundsfjernelse
+#   Tkinter til at kunne anvende Windows dialog vindue
+#   Pillow (PIL forkortet) til at håndtere billedfiler, samt konvertere
+#   eksempelvis fra AVIF til PNG
 
 
 class ImageProcessor(BoxLayout):
@@ -43,9 +47,9 @@ class ImageProcessor(BoxLayout):
             self.selected_path = path
             self.update_file_info(self.selected_path, "Output: Ikke valgt")
             self.show_image(self.selected_path, self.ids.before_image)
-        elif path.lower().endswith((".avif")):
-            img = Image.open(path)
-            img.save(path,"PNG")
+        elif path.lower().endswith((".avif")): # Konvertering af AVIF til PNG
+            img = Image.open(path) # Åbner filen med Image.open
+            img.save(path,"PNG") # Gemmer som PNG
             self.reset_images()
             self.selected_path = path
             self.update_file_info(self.selected_path, "Output: Ikke Valgt")
@@ -53,8 +57,8 @@ class ImageProcessor(BoxLayout):
 
     def reset_images(self):
         """ Clears the Before & After images when selecting a new file or folder """
-        Clock.schedule_once(lambda dt: setattr(self.ids.before_image, 'source', ''), 0)
-        Clock.schedule_once(lambda dt: setattr(self.ids.after_image, 'source', ''), 0)
+        self.ids.before_image.source = ''
+        self.ids.after_image.source = ''
 
     def select_file(self):
         """ Opens a file dialog to select an image """
@@ -90,11 +94,13 @@ class ImageProcessor(BoxLayout):
         return output_folder
 
     def update_file_info(self, selected, saving):
-        """ Updates the UI to show the selected file/folder and where it will be saved """
-        Clock.schedule_once(lambda dt: setattr(self.ids.file_label, 'text', f"Fra: {selected}\nTil: {saving}"), 0)
+        # Opdaterer UI til at vise den valgte fil/mappe, og dens eksporteringssti
+        self.ids.file_label.text = f"Fra: {selected}\nTil: {saving}"
 
     def show_image(self, image_path, widget):
-        """ Displays an image in a Kivy Image widget """
+        # Lambda bruges til at få programmet til at vente med at opdatere det widget med billedet før
+        # process er klar - og clock..._once sørger for, at det kun sker én gang. Ellers vil output
+        # image bare være blankt, da programmet ikke kan process billedet "instant"
         Clock.schedule_once(lambda dt: setattr(widget, 'source', image_path), 0)
 
     def start_processing(self):
@@ -118,7 +124,7 @@ class ImageProcessor(BoxLayout):
         """ Removes the background from a single image and saves it properly """
         try:
             # Open the image and ensure it's in RGBA mode
-            input_img = PILImage.open(image_path)
+            input_img = Image.open(image_path)
             if input_img.mode != "RGBA":
                 input_img = input_img.convert("RGBA")
 
