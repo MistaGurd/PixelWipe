@@ -9,3 +9,6 @@ Programmet kan håndtere enkelte filer, samt mapper, med følgende formater:
 - JPEG
 - WEBP
 - AVIF
+
+Billede af programmets brugerflade:
+<img width="597" alt="PixelWipe" src="https://github.com/user-attachments/assets/6cd97b39-1061-48d5-b411-6b7e1835ed8c" />
