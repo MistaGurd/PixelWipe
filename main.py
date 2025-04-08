@@ -17,13 +17,14 @@ from PIL import Image
 #   eksempelvis fra AVIF til PNG
 
 
-class PixelWipe(BoxLayout):
+class PixelWipe(BoxLayout): # Hovedklasse, som matcher med klassen i kivy koden
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.selected_path = None
         self.output_folder = None
-        self.processed_images = []
+        # ^ standardvædier i den forstand, at programmet ikke har valgt et billede, eller en mappe, idet programmet starter.
+        self.processed_images = [] # Laver en tom liste, hvor output ryger ind
 
         # Set default output folder to "Downloads"
         self.default_output_folder = os.path.join(os.path.expanduser("~"), "Overførsler")
@@ -62,7 +63,7 @@ class PixelWipe(BoxLayout):
 
     def select_file(self):
         """ Opens a file dialog to select an image """
-        file_path = filedialog.askopenfilename(filetypes=[("Image files", "*.png;*.jpg;*.jpeg;*.webp;*.avif")])
+        file_path = filedialog.askopenfilename(filetypes=[("Billedformater", "*.png;*.jpg;*.jpeg;*.webp;*.avif")])
         if file_path:
             self.reset_images()
             self.selected_path = file_path
@@ -100,7 +101,7 @@ class PixelWipe(BoxLayout):
     def show_image(self, image_path, widget):
         # Lambda bruges til at få programmet til at vente med at opdatere widget før
         # process er klar - og clock..._once sørger for, at det kun sker én gang. Ellers vil output
-        # image bare være blankt, da programmet ikke kan process billedet "instant"
+        # image bare være blank, da programmet ikke kan process billedet "instant"
         # https://kivy.org/doc/stable/api-kivy.clock.html
         Clock.schedule_once(lambda dt: setattr(widget, 'source', image_path), 0)
 
@@ -174,7 +175,7 @@ class PixelWipe(BoxLayout):
 
 class PixelWipeApp(App):
     def build(self):
-        Builder.load_file("design.kv")
+        Builder.load_file("design.kv") # Indlæser design fra Kivy
         return PixelWipe()
 
 
