@@ -26,7 +26,7 @@ class PixelWipe(BoxLayout): # Hovedklasse, som matcher med klassen i kivy koden
         # ^ standardvædier i den forstand, at programmet ikke har valgt et billede, eller en mappe, idet programmet starter.
         self.processed_images = [] # Laver en tom liste, hvor output ryger ind
 
-        self.default_output_folder = os.path.join(os.path.expanduser("~"), "Overførsler") # Når man behandler et billede (el. mappe)
+        self.default_output_folder = os.path.join(os.path.expanduser("~"), "Downloads") # Når man behandler et billede (el. mappe)
                                                                                           # så er downloads standard-output, med mindre
                                                                                           # brugeren vælger en placering
 
