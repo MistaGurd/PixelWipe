@@ -1,27 +1,27 @@
 <PixelWipe>:
     orientation: "vertical"
 
-    Label:
+    Label: # Øverste del af skærmen
         id: file_label
         text: "Vælg et billede eller en mappe"
         size_hint_y: 0.1
 
-    BoxLayout:
+    BoxLayout: # Det område, hvor før og efter billed bliver vist i
         size_hint_y: 0.4
         Image:
             id: before_image
-            source: ''
+            source: '' # Starter med at være tomt, altså, uden noget billede
         Image:
             id: after_image
             source: ''
 
-    ProgressBar:
-        id: progress
+    ProgressBar: # Bliver defineret vha. main.py, men visuelt vist her
+        id: progress # id, som vi kan kalde på i main.py
         max: 100
         value: 0
         size_hint_y: 0.05
 
-    BoxLayout:
+    BoxLayout: # De tre knapper, som programmet fungerer ud fra
         size_hint_y: 0.1
         Button:
             text: "Vælg et billede"
@@ -31,4 +31,4 @@
             on_release: root.select_folder()
         Button:
             text: "Process"
-            on_release: root.start_processing()
+            on_release: root.start_processing() # Når knappen bliver trykket på, påbegynder start_processing funktionen i main.py
