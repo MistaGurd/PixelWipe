@@ -19,51 +19,54 @@ from PIL import Image
 
 class PixelWipe(BoxLayout): # Hovedklasse, som matcher med klassen i kivy koden
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs): # Standard-kaldbare-attributes defineres her
         super().__init__(**kwargs)
         self.selected_path = None
         self.output_folder = None
         # ^ standardvædier i den forstand, at programmet ikke har valgt et billede, eller en mappe, idet programmet starter.
         self.processed_images = [] # Laver en tom liste, hvor output ryger ind
 
-        # Set default output folder to "Downloads"
-        self.default_output_folder = os.path.join(os.path.expanduser("~"), "Overførsler")
+        self.default_output_folder = os.path.join(os.path.expanduser("~"), "Overførsler") # Når man behandler et billede (el. mappe)
+                                                                                          # så er downloads standard-output, med mindre
+                                                                                          # brugeren vælger en placering
 
         # Hide Tkinter root window
         self.tk_root = tk.Tk()
         self.tk_root.withdraw()
+        # ^ Lader os anvende tkinter med Stifinder uden tk-pop-up vinduer
 
-        # Enable drag & drop
-        Window.bind(on_dropfile=self.on_drop)
+        Window.bind(on_dropfile=self.on_drop) # Når filer bliver drag & dropped, skal det køre on_drop funktionen
 
-    def on_drop(self, window, file_path):
-        """ Handles drag & drop for files or folders """
-        path = file_path.decode("utf-8")
+    def on_drop(self, window, file_path): # Funktion, som håndterer drag-and-drop
+        path = file_path.decode("utf-8") # Når man drag and dropper vil Kivy gerne have
+                                         # et input i bytes, derfor decoder vi med utf-8 fra str til bytes
 
-        if os.path.isdir(path):  # If it's a folder
+        if os.path.isdir(path):  # Hvis det er en mappe (dir for directory/mappe)
+            self.selected_path = path
+            self.update_file_info(self.selected_path, "Output: Ikke valgt") # Standardtekst, indtil man vælger outputsti
+
+        elif path.lower().endswith((".png", ".jpg", ".jpeg",".webp")): # Hvis det er en enkel fil i følgende format
+            self.reset_images() # Sørger for et rent canvas, altså, ikke nogen gamle processed billeder
             self.selected_path = path
             self.update_file_info(self.selected_path, "Output: Ikke valgt")
-        elif path.lower().endswith((".png", ".jpg", ".jpeg",".webp")):
-            self.reset_images()
-            self.selected_path = path
-            self.update_file_info(self.selected_path, "Output: Ikke valgt")
-            self.show_image(self.selected_path, self.ids.before_image)
+            self.show_image(self.selected_path, self.ids.before_image) # Viser før og efter billede
+
         elif path.lower().endswith((".avif")): # Konvertering af AVIF til PNG
-            img = Image.open(path) # Åbner filen med Image.open
-            img.save(path,"PNG") # Gemmer som PNG
+            img = Image.open(path) # Åbner filen med Image.open fra Pillow
+            img.save(path,"PNG") # Gemmer path som AVIF filen konverteret til en png
             self.reset_images()
             self.selected_path = path
             self.update_file_info(self.selected_path, "Output: Ikke Valgt")
             self.show_image(self.selected_path, self.ids.before_image)
 
     def reset_images(self):
-        """ Clears the Before & After images when selecting a new file or folder """
         self.ids.before_image.source = ''
         self.ids.after_image.source = ''
+        # Opdaterer self til at være tom (som hermed giver os et blank canvas, når vi vælger nye filer/mapper)
 
-    def select_file(self):
-        """ Opens a file dialog to select an image """
+    def select_file(self): # Funktion til når man vælger et billede vha. knappen i programmets UI
         file_path = filedialog.askopenfilename(filetypes=[("Billedformater", "*.png;*.jpg;*.jpeg;*.webp;*.avif")])
+        # Åbner Windows dialogvindue, som kun tillader, at man vælger overstående filformater
         if file_path:
             self.reset_images()
             self.selected_path = file_path
@@ -71,9 +74,8 @@ class PixelWipe(BoxLayout): # Hovedklasse, som matcher med klassen i kivy koden
             self.show_image(self.selected_path, self.ids.before_image)
 
 
-    def select_folder(self):
-        """ Opens a folder dialog to select a folder """
-        folder_path = filedialog.askdirectory()
+    def select_folder(self): # Funktion til når man vælger en mappe  vha. knappen i programmets UI
+        folder_path = filedialog.askdirectory() # askdirectory gør at Windows dialogvinduet kun viser mapper og ikke enkelte filer
         if folder_path:
             self.reset_images()
             self.selected_path = folder_path
