@@ -172,11 +172,11 @@ class ImageProcessor(BoxLayout):
             Clock.schedule_once(lambda dt: self.update_file_info("Fejl", fejl_besked), 0)
 
 
-class ImageProcessorApp(App):
+class PixelWipeApp(App):
     def build(self):
         Builder.load_file("design.kv")
-        return ImageProcessor()
+        return PixelWipe()
 
 
 if __name__ == "__main__":
-    ImageProcessorApp().run()
+    PixelWipeApp().run()
