@@ -10,6 +10,7 @@ import tkinter as tk
 from rembg import remove
 from PIL import Image
 # Diverse import:
+#   Threading til multitasking
 #   Kivy til UI
 #   RemBG til baggrundsfjernelse
 #   Tkinter til at kunne anvende Windows dialog vindue
@@ -120,36 +121,36 @@ class PixelWipe(BoxLayout): # Hovedklasse, som matcher med klassen i kivy koden
         # Sørger for, at progressbaren stemmer overens med de behandlede biller
         # ids.progress kalder på progressBar i Kivy koden
 
-        if os.path.isfile(self.selected_path):
+        if os.path.isfile(self.selected_path): # Hvis det er en fil
             threading.Thread(target=self.process_image, args=(self.selected_path,), daemon=True).start()
-        elif os.path.isdir(self.selected_path):
+        elif os.path.isdir(self.selected_path): # Hvis det er en mappe
             threading.Thread(target=self.process_folder, daemon=True).start()
+        # Kort fortalt: Threading sørger for multitasking i programmet. Lidt på samme måde som en computers CPU
+
+        # Når programmet kører, er det en tråd (eller én opgave). Når brugeren
+        # derefter vælger at fjerne baggrunden, skal programmet både køre
+        # UI, men også rembg til at fjerne baggrunden. Threading lader programmet
+        # opdele arbejdet, således at UI stadig er responsiv.
 
     def process_image(self, image_path):
-        """ Removes the background from a single image and saves it properly """
         try:
-            # Open the image and ensure it's in RGBA mode
-            input_img = Image.open(image_path)
-            if input_img.mode != "RGBA":
-                input_img = input_img.convert("RGBA")
+            input_img = Image.open(image_path) # Pillow åbner billedet
+            if input_img.mode != "RGBA": # Tjekker, om billedet er i alm. RGB farver og alpha (gennemsigtighed/styrke) via !=
+                input_img = input_img.convert("RGBA") # Hvis ikke, anvender vi .convert til at sørge for, at billedet er i det rigtige format
+                                                      # Især Alpha kanalen er vigtig her, ellers er det ikke muligt at have en gennemsigtig baggrund.
 
-            # Process the image
-            output_img = remove(input_img)
+            output_img = remove(input_img) # .remove stammer fra rembg, og gemmer her billedet uden baggrund.
 
-            # Ensure output path ends with .png
-            output_filename = os.path.splitext(os.path.basename(image_path))[0] + "ingen_baggrund.png"
-            output_path = os.path.join(self.output_folder, output_filename)
+            output_filename = os.path.splitext(os.path.basename(image_path))[0] + "_ingen_baggrund.png" # Tager det originale filnavn, og tilføjer "ingen_baggrund"
+            output_path = os.path.join(self.output_folder, output_filename) # Sørger for at ligge det i outputstien
 
-            # Save as PNG to prevent corruption
-            output_img.save(output_path, format="PNG")
+            output_img.save(output_path, format="PNG") # Gemmer i PNG filformat med .save fra Pillow
 
-            # Show Before image
-            self.show_image(image_path, self.ids.before_image)
-
-            # Show processed After image
-            self.show_image(output_path, self.ids.after_image)
+            self.show_image(image_path, self.ids.before_image) # Opdaterer show_image widget i Kivy til at være billedet før behandling
+            self.show_image(output_path, self.ids.after_image) # Opdaterer show_image widget i Kivy til at være billedet efter behandling
 
             Clock.schedule_once(lambda dt: self.update_file_info(image_path, output_path), 0)
+            # Når programmet er færdig med at behandle et billede, opdaterer den update_file_info
         except Exception as error:
             error_message = f"Error: {str(error)}"
             Clock.schedule_once(lambda dt: setattr(self.ids.file_label, 'text', error_message), 0)
