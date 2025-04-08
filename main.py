@@ -151,27 +151,27 @@ class PixelWipe(BoxLayout): # Hovedklasse, som matcher med klassen i kivy koden
 
             Clock.schedule_once(lambda dt: self.update_file_info(image_path, output_path), 0)
             # Når programmet er færdig med at behandle et billede, opdaterer den update_file_info
-        except Exception as error:
-            error_message = f"Error: {str(error)}"
-            Clock.schedule_once(lambda dt: setattr(self.ids.file_label, 'text', error_message), 0)
+        except Exception as error: # Hvis en fejl forekommer
+            error_message = f"Error: {str(error)}" # Udskriver programmet Error... også fejlen
+            Clock.schedule_once(lambda dt: setattr(self.ids.file_label, 'text', error_message), 0) # Opdaterer ids.file_label til at vise fejlbeskeden
 
     def process_folder(self):
-        """ Processes all images in a folder and saves them in a new folder """
         try:
             files = [f for f in os.listdir(self.selected_path) if f.lower().endswith(('.png', '.jpg', '.jpeg','.webp','.avif'))]
+            # Når en mappe er valgt, laver den en liste af de filer, som er i formatet png, jpg, jpeg, webp og avif.
             if not files:
                 Clock.schedule_once(lambda dt: self.update_file_info("Ingen billeder fundet!", ""), 0)
-                return
+                return # Hvis programmet ikke finder nogle kompatible filer, udskriver den en error til brugeren
 
-            for index, file in enumerate(files):
+            for index, file in enumerate(files): # Hver fil bliver gemt som et index hvor enumerate sørger for at nummerere dem
                 input_path = os.path.join(self.selected_path, file)
-                self.process_image(input_path)
+                self.process_image(input_path) # Kører hvert billede i mappen gennem process_image funktionen
 
-                # Update progress bar dynamically
-                progress_value = int(((index + 1) / len(files)) * 100)
-                Clock.schedule_once(lambda dt: setattr(self.ids.progress, 'value', progress_value), 0)
+                progress_value = int(((index + 1) / len(files)) * 100) # Ud fra længden af files, altså, filerne i den valgte mappe
+                                                                       # defineres procentdelen hver fil udgør
+                Clock.schedule_once(lambda dt: setattr(self.ids.progress, 'value', progress_value), 0) # Opdaterer progressbar ud fra hvor langt i mappen programmet er
 
-            Clock.schedule_once(lambda dt: self.update_file_info(self.selected_path, self.output_folder), 0)
+            Clock.schedule_once(lambda dt: self.update_file_info(self.selected_path, self.output_folder), 0) # Når færdig, opdateres update_file_info
         except Exception as fejl:
             fejl_besked = f"Fejl: {str(fejl)}"
             Clock.schedule_once(lambda dt: self.update_file_info("Fejl", fejl_besked), 0)
