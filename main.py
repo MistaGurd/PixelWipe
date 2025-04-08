@@ -81,15 +81,13 @@ class PixelWipe(BoxLayout): # Hovedklasse, som matcher med klassen i kivy koden
             self.update_file_info(self.selected_path, "Output: Ikke valgt")
 
     def ask_output_folder(self):
-        """ Asks user for an output folder when clicking Process, defaults to Downloads """
         folder = filedialog.askdirectory(title="Vælg mappesti")
         return folder if folder else self.create_unique_output_folder(self.default_output_folder) # Hvis brugeren ikke selv vælger en mappe
                                                                                                   # så kører create_unique_output_folder
                                                                                                   # som laver en mappe i Downloads
 
     def create_unique_output_folder(self, base_folder):
-        """ Creates a unique folder for processed images if one exists """
-        output_folder = os.path.join(base_folder, "Behandlede billeder")
+        output_folder = os.path.join(base_folder, "Behandlede billeder") # Laver en mappe, hvis brugeren ikke vælger en
         counter = 1
         while os.path.exists(output_folder):
             output_folder = os.path.join(base_folder, f"Processed_Images_{counter}")
