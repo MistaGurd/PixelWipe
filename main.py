@@ -88,11 +88,11 @@ class PixelWipe(BoxLayout): # Hovedklasse, som matcher med klassen i kivy koden
 
     def create_unique_output_folder(self, base_folder):
         output_folder = os.path.join(base_folder, "Behandlede billeder") # Laver en mappe, hvis brugeren ikke vælger en
-        counter = 1
+        counter = 1  # Programmet navngiver filer, og starter med billede 1
         while os.path.exists(output_folder):
-            output_folder = os.path.join(base_folder, f"Processed_Images_{counter}")
-            counter += 1
-        os.makedirs(output_folder)
+            output_folder = os.path.join(base_folder, f"Billednummer_{counter}") # her navngives de
+            counter += 1 # og tæller op for hvert billede
+        os.makedirs(output_folder) # Opretter mappen
         return output_folder
 
     def update_file_info(self, selected, saving):
@@ -107,16 +107,18 @@ class PixelWipe(BoxLayout): # Hovedklasse, som matcher med klassen i kivy koden
         Clock.schedule_once(lambda dt: setattr(widget, 'source', image_path), 0)
 
     def start_processing(self):
-        """ Asks for output folder and starts processing """
         if not self.selected_path:
             self.update_file_info("Ingen fil eller mappe valgt!", "")
             return
+        # Hvis man prøver at køre programmet, uden at have valgt en fil eller mappe
+        # så vil koden returnere "Ingen fil eller mappe valgt!"
 
-        self.output_folder = self.ask_output_folder()
-        self.processed_images = []
+        self.output_folder = self.ask_output_folder() # Definerer outputstien
+        self.processed_images = [] # Starter med en tom liste af billeder
 
-        # Reset progress bar correctly
         Clock.schedule_once(lambda dt: setattr(self.ids.progress, 'value', 0), 0)
+        # Sørger for, at progressbaren stemmer overens med de behandlede biller
+        # ids.progress kalder på progressBar i Kivy koden
 
         if os.path.isfile(self.selected_path):
             threading.Thread(target=self.process_image, args=(self.selected_path,), daemon=True).start()
