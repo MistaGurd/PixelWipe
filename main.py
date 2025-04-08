@@ -30,7 +30,6 @@ class PixelWipe(BoxLayout): # Hovedklasse, som matcher med klassen i kivy koden
                                                                                           # så er downloads standard-output, med mindre
                                                                                           # brugeren vælger en placering
 
-        # Hide Tkinter root window
         self.tk_root = tk.Tk()
         self.tk_root.withdraw()
         # ^ Lader os anvende tkinter med Stifinder uden tk-pop-up vinduer
@@ -38,8 +37,8 @@ class PixelWipe(BoxLayout): # Hovedklasse, som matcher med klassen i kivy koden
         Window.bind(on_dropfile=self.on_drop) # Når filer bliver drag & dropped, skal det køre on_drop funktionen
 
     def on_drop(self, window, file_path): # Funktion, som håndterer drag-and-drop
-        path = file_path.decode("utf-8") # Når man drag and dropper vil Kivy gerne have
-                                         # et input i bytes, derfor decoder vi med utf-8 fra str til bytes
+        path = file_path.decode("utf-8")  # Når man drag and dropper vil Kivy gerne have
+                                          # et input i bytes, derfor decoder vi med utf-8 fra str til bytes
 
         if os.path.isdir(path):  # Hvis det er en mappe (dir for directory/mappe)
             self.selected_path = path
