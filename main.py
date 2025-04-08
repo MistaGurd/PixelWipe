@@ -17,7 +17,7 @@ from PIL import Image
 #   eksempelvis fra AVIF til PNG
 
 
-class ImageProcessor(BoxLayout):
+class PixelWipe(BoxLayout):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
