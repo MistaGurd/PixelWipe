@@ -17,7 +17,6 @@ from PIL import Image
 #   Pillow (PIL forkortet) til at håndtere billedfiler, samt konvertere
 #   eksempelvis fra AVIF til PNG
 
-
 class PixelWipe(BoxLayout): # Hovedklasse, som matcher med klassen i kivy koden
 
     def __init__(self, **kwargs): # Standard-kaldbare-attributes defineres her
