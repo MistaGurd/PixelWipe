@@ -45,19 +45,11 @@ class PixelWipe(BoxLayout): # Hovedklasse, som matcher med klassen i kivy koden
             self.selected_path = path
             self.update_file_info(self.selected_path, "Output: Ikke valgt") # Standardtekst, indtil man vælger outputsti
 
-        elif path.lower().endswith((".png", ".jpg", ".jpeg",".webp")): # Hvis det er en enkel fil i følgende format
+        elif path.lower().endswith((".png", ".jpg", ".jpeg",".webp", ".avif")): # Hvis det er en enkel fil i følgende format
             self.reset_images() # Sørger for et rent canvas, altså, ikke nogen gamle processed billeder
             self.selected_path = path
             self.update_file_info(self.selected_path, "Output: Ikke valgt")
             self.show_image(self.selected_path, self.ids.before_image) # Viser før og efter billede
-
-        elif path.lower().endswith((".avif")): # Konvertering af AVIF til PNG
-            img = Image.open(path) # Åbner filen med Image.open fra Pillow
-            img.save(path,"PNG") # Gemmer path som AVIF filen konverteret til en png
-            self.reset_images()
-            self.selected_path = path
-            self.update_file_info(self.selected_path, "Output: Ikke Valgt")
-            self.show_image(self.selected_path, self.ids.before_image)
 
     def reset_images(self):
         self.ids.before_image.source = ''
