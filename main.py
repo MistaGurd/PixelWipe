@@ -80,10 +80,10 @@ class PixelWipe(BoxLayout): # Hovedklasse, som matcher med klassen i kivy koden
 
     def create_unique_output_folder(self, base_folder):
         output_folder = os.path.join(base_folder, "Behandlede billeder") # Laver en mappe, hvis brugeren ikke vælger en
-        counter = 1  # Programmet navngiver filer, og starter med billede 1
+        counter = 1  #
         while os.path.exists(output_folder):
-            output_folder = os.path.join(base_folder, f"Billednummer_{counter}") # her navngives de
-            counter += 1 # og tæller op for hvert billede
+            output_folder = os.path.join(base_folder, f"PixelWiped Folder_{counter}") # Hvis der allerede findes en "PixelWiped Fo" tæller counter up, så der ikke overwrites
+            counter += 1
         os.makedirs(output_folder) # Opretter mappen
         return output_folder
 
