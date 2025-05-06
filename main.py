@@ -38,7 +38,7 @@ class PixelWipe(BoxLayout): # Hovedklasse, som matcher med klassen i kivy koden
 
     def on_drop(self, window, file_path): # Funktion, som håndterer drag-and-drop
         path = file_path.decode("utf-8")  # Når man drag and dropper vil Kivy gerne have
-                                          # et input i bytes, derfor decoder vi med utf-8 fra str til bytes
+                                          # et input som en streng, derfor decoder vi med utf-8 fra byte til string
 
         if os.path.isdir(path):  # Hvis det er en mappe (dir for directory/mappe)
             self.selected_path = path
