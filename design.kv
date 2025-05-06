@@ -24,11 +24,11 @@
     BoxLayout: # De tre knapper, som programmet fungerer ud fra
         size_hint_y: 0.1
         Button:
-            text: "Vælg et billede"
+            text: "Import et enkelt billede"
             on_release: root.select_file()
         Button:
-            text: "Vælg en mappe"
+            text: "Import billeder fra mappe"
             on_release: root.select_folder()
         Button:
-            text: "Process"
+            text: "Begynd baggrundsfjernelse"
             on_release: root.start_processing() # Når knappen bliver trykket på, påbegynder start_processing funktionen i main.py
