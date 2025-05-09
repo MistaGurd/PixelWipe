@@ -9,6 +9,7 @@ from tkinter import filedialog
 import tkinter as tk
 from rembg import remove
 from PIL import Image
+import pillow_avif
 # Diverse import:
 #   Threading til multitasking
 #   Kivy til UI
