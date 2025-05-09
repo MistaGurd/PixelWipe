@@ -11,5 +11,5 @@ Programmet kan håndtere enkelte filer, samt mapper, med følgende formater:
 - AVIF
 
 Billede af programmets brugerflade:
-
-<img width="597" alt="PixelWipe" src="https://github.com/user-attachments/assets/6cd97b39-1061-48d5-b411-6b7e1835ed8c" />
+![image](https://github.com/user-attachments/assets/5b2a85c0-a696-4485-98e5-7fd75c08dd13)
+*Xiaomi SU7 Ultra
