@@ -12,11 +12,10 @@ Programmet kan håndtere enkelte filer, samt mapper, med følgende formater:
 
 Billede af programmets brugerflade:
 ![image](https://github.com/user-attachments/assets/5b2a85c0-a696-4485-98e5-7fd75c08dd13)
-*Xiaomi SU7 Ultra
+_*Xiaomi SU7 Ultra_
 
 
-**De vigtige libraries:
-**
+**De vigtige libraries:**
 - rembg
 - pillow
 - pilliw_avif
