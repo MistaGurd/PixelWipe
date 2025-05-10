@@ -35,6 +35,8 @@ class PixelWipe(BoxLayout): # Hovedklasse, som matcher med klassen i kivy koden
         self.tk_root.withdraw()
         # ^ Lader os anvende tkinter med Stifinder uden tk-pop-up vinduer
 
+        self.threads = []
+
         Window.bind(on_dropfile=self.on_drop) # Når filer bliver drag & dropped, skal det køre on_drop funktionen
 
     def on_drop(self, window, file_path): # Funktion, som håndterer drag-and-drop
@@ -106,6 +108,10 @@ class PixelWipe(BoxLayout): # Hovedklasse, som matcher med klassen i kivy koden
         # Hvis man prøver at køre programmet, uden at have valgt en fil eller mappe
         # så vil koden returnere "Ingen fil eller mappe valgt!"
 
+        if not os.path.exists(self.selected_path):
+            Clock.schedule_once(lambda dt: setattr(self.ids.file_label, 'text', f"Fejl, filen {os.path.basename(self.selected_path)} findes ikke! \n Er den blevet flyttet, eller slettet?"))
+            return
+
         self.output_folder = self.ask_output_folder() # Definerer outputstien
         self.processed_images = [] # Starter med en tom liste af billeder
 
@@ -114,15 +120,21 @@ class PixelWipe(BoxLayout): # Hovedklasse, som matcher med klassen i kivy koden
         # ids.progress kalder på progressBar i Kivy koden
 
         if os.path.isfile(self.selected_path): # Hvis det er en fil
+            print("Process Image kører")
             threading.Thread(target=self.process_image, args=(self.selected_path,), daemon=True).start()
         elif os.path.isdir(self.selected_path): # Hvis det er en mappe
+            print("Process Folder kører")
             threading.Thread(target=self.process_folder, daemon=True).start()
+
         # Kort fortalt: Threading sørger for multitasking i programmet. Lidt på samme måde som en computers CPU
 
         # Når programmet kører, er det en tråd (eller én opgave). Når brugeren
         # derefter vælger at fjerne baggrunden, skal programmet både køre
         # UI, men også rembg til at fjerne baggrunden. Threading lader programmet
         # opdele arbejdet, således at UI stadig er responsiv.
+
+
+
 
     def process_image(self, image_path):
         try:
@@ -143,6 +155,7 @@ class PixelWipe(BoxLayout): # Hovedklasse, som matcher med klassen i kivy koden
 
             Clock.schedule_once(lambda dt: self.update_file_info(image_path, output_path), 0)
             # Når programmet er færdig med at behandle et billede, opdaterer den update_file_info
+
         except Exception as error: # Hvis en fejl forekommer
             error_message = f"Error: {str(error)}" # Udskriver programmet Error... også fejlen
             Clock.schedule_once(lambda dt: setattr(self.ids.file_label, 'text', error_message), 0) # Opdaterer ids.file_label til at vise fejlbeskeden
@@ -164,10 +177,9 @@ class PixelWipe(BoxLayout): # Hovedklasse, som matcher med klassen i kivy koden
                 Clock.schedule_once(lambda dt: setattr(self.ids.progress, 'value', progress_value), 0) # Opdaterer progressbar ud fra hvor langt i mappen programmet er
 
             Clock.schedule_once(lambda dt: self.update_file_info(self.selected_path, self.output_folder), 0) # Når færdig, opdateres update_file_info
-        except Exception as fejl:
-            fejl_besked = f"Fejl: {str(fejl)}"
-            Clock.schedule_once(lambda dt: self.update_file_info("Fejl", fejl_besked), 0)
-
+        except Exception as error:
+            error_message = f"Fejl: {str(error)}"
+            Clock.schedule_once(lambda dt: self.update_file_info("Fejl", error_message), 0)
 
 class PixelWipeApp(App):
     def build(self):
@@ -177,3 +189,5 @@ class PixelWipeApp(App):
 
 if __name__ == "__main__":
     PixelWipeApp().run()
+
+
