@@ -24,5 +24,6 @@ _*Xiaomi SU7 Ultra_
 - kivy
 
 **Troubleshooting**
+
 Hvis man i sin IDE ender med, at ens terminal giver numba violations i en uendelig lang kører, prøv at indsæt følgende linje under import os:
 os.environ["NUMBA_DISABLE_JIT"] = "1"
