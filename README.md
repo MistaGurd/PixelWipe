@@ -16,6 +16,7 @@ _*Xiaomi SU7 Ultra_
 
 
 **De vigtige libraries:**
+
 Start med først at installere fra requirements.txt (Nogle IDE's kan finde ud af det automatisk, andre kræver en manuel kommando med pip) - hvis det fejler i hvilken som helst grad, er nedenstående en liste over de vigtigste libraries:
 - rembg
 - pillow
