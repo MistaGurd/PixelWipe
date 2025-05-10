@@ -37,9 +37,9 @@ class PixelWipe(BoxLayout): # Hovedklasse, som matcher med klassen i kivy koden
 
         self.threads = []
 
-        Window.bind(on_dropfile=self.on_drop) # Når filer bliver drag & dropped, skal det køre on_drop funktionen
+        Window.bind(on_dropfile=self.on_drop) # Når filer bliver drag & dropped, skal det køre on_drop metoden
 
-    def on_drop(self, window, file_path): # Funktion, som håndterer drag-and-drop
+    def on_drop(self, window, file_path): # Metode, som håndterer drag-and-drop
         path = file_path.decode("utf-8")  # Når man drag and dropper vil Kivy gerne have
                                           # et input som en streng, derfor decoder vi med utf-8 fra byte til string
 
@@ -58,7 +58,7 @@ class PixelWipe(BoxLayout): # Hovedklasse, som matcher med klassen i kivy koden
         self.ids.after_image.source = ''
         # Opdaterer self til at være tom (som hermed giver os et blank canvas, når vi vælger nye filer/mapper)
 
-    def select_file(self): # Funktion til når man vælger et billede vha. knappen i programmets UI
+    def select_file(self): # Metode til når man vælger et billede vha. knappen i programmets UI
         file_path = filedialog.askopenfilename(filetypes=[("Billedformater", "*.png;*.jpg;*.jpeg;*.webp;*.avif")])
         # Åbner Windows dialogvindue, som kun tillader, at man vælger overstående filformater
         if file_path:
@@ -68,7 +68,7 @@ class PixelWipe(BoxLayout): # Hovedklasse, som matcher med klassen i kivy koden
             self.show_image(self.selected_path, self.ids.before_image)
 
 
-    def select_folder(self): # Funktion til når man vælger en mappe  vha. knappen i programmets UI
+    def select_folder(self): # Metode til når man vælger en mappe  vha. knappen i programmets UI
         folder_path = filedialog.askdirectory() # askdirectory gør at Windows dialogvinduet kun viser mapper og ikke enkelte filer
         if folder_path:
             self.reset_images()
@@ -170,7 +170,7 @@ class PixelWipe(BoxLayout): # Hovedklasse, som matcher med klassen i kivy koden
 
             for index, file in enumerate(files): # Hver fil bliver gemt som et index hvor enumerate sørger for at nummerere dem
                 input_path = os.path.join(self.selected_path, file)
-                self.process_image(input_path) # Kører hvert billede i mappen gennem process_image funktionen
+                self.process_image(input_path) # Kører hvert billede i mappen gennem process_image metoden
 
                 progress_value = int(((index + 1) / len(files)) * 100) # Ud fra længden af files, altså, filerne i den valgte mappe
                                                                        # defineres procentdelen hver fil udgør
