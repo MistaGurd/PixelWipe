@@ -28,5 +28,6 @@ Start med først at installere fra requirements.txt (Nogle IDE's kan finde ud af
 **Troubleshooting**
 
 1. Hvis man i sin IDE ender med, at ens terminal giver numba violations i en uendelig lang kører, prøv at indsæt følgende linje under import os:
-os.environ["NUMBA_DISABLE_JIT"] = "1"
+
+> os.environ["NUMBA_DISABLE_JIT"] = "1"
 2. For at installere requirements.txt skal man bruge setuptools og pip. Disse er Python 3.12.X ikke født med, og skal derfor manuelt installeres. 
